@@ -1,6 +1,7 @@
 import User from "../model/user.model.js";
 import dotenv from "dotenv";
-import randomWord from "random-words";
+import jwt from "jsonwebtoken";
+
 
 dotenv.config();
 
@@ -8,22 +9,22 @@ dotenv.config();
 
 export const register = async (req,res) => {
     try{
-        let { name, level } = req.body;
+        let { name, difficulty,amount,category } = req.body;
         // console.log(req.body);
         let user = User.findOne({ name: name });
-        if(user && user.name){
-            res.status(409).json({ message: "Username already exists" });
-        }else{
+        // if(user && user.name){
+        //     res.status(409).json({ message: "Username already exists" });
+        // }else{
             let newUser = new User({
                 name,
-                level
+                difficulty,
+                amount,
+                category,
             });
             newUser.save();
             let token = jwt.sign({ _id: newUser._id }, process.env.JWT_SECRET);
             return res.status(201).send({token});
-        }
-        
-        
+        // }
     }catch(err){
         console.log(err);
         return res.status(500).json({message:"Something went wrong in register API"});
@@ -40,16 +41,6 @@ export const getAllUsers = async (req,res) => {
     }
 }
 
-export const getRandomWord = (req,res) =>{
-    try{
-        let [word] = randomWord({exactly:1});
-        console.log(word);
-        res.status(200).send({word:word});
-    }
-    catch(err){
-        console.log(err);
-    }
-}
 
 export const updateScore = async (req,res) => {
     try{
