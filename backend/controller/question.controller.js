@@ -17,15 +17,15 @@ export const getQuestions = async(req,res) => {
     try{
         console.log(req.query.difficulty);
         const { difficulty, category, amount } = req.query;
-        let questions = await Question.find({difficulty:difficulty});
-        // let questions;
-        // if(difficulty && category && amount){
-        //     questions = await Question.find({difficulty:difficulty, category:category}).limit(amount);
-        // }else if(difficulty && amount){
-        //     questions = await Question.find({difficulty:difficulty}).limit(amount);
-        // }else if(category && amount){
-        //     questions = await Question.find({category:category}).limit(amount);
-        // }
+        // let questions = await Question.find({difficulty:difficulty});
+        let questions;
+        if(difficulty && category && amount){
+            questions = await Question.find({difficulty:difficulty, category:category}).limit(amount);
+        }else if(difficulty && amount){
+            questions = await Question.find({difficulty:difficulty}).limit(amount);
+        }else if(category && amount){
+            questions = await Question.find({category:category}).limit(amount);
+        }
         console.log(questions);
         res.status(200).send(questions);
     }catch(err){
